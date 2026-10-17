@@ -2,17 +2,29 @@
   "name": "backend",
   "version": "1.0.0",
   "main": "index.js",
+  "type": "module",
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node ./src/server/index.js --harmony",
+    "dev": "nodemon -L ./src/server/index.js --harmony"
   },
   "keywords": [],
-  "author": "",
+  "author": "Daniel Velásquez",
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "body-parser": "^2.3.0",
+    "compression": "^1.8.2",
     "cors": "^2.8.6",
-    "dotenv": "^18.0.7",
-    "express": "^5.3.0"
+    "dotenv": "^18.0.8",
+    "express": "^5.3.0",
+    "express-request-id": "^3.0.0",
+    "joi": "^18.2.9",
+    "moment-timezone": "^0.6.5",
+    "oracledb": "^26.0.0",
+    "winston": "^3.19.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.14"
