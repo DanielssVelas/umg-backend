@@ -26,7 +26,6 @@ const config = {
   poolTimeout: ORACLE_POOL_TIMEOUT,
   poolAlias: 'default'
 }
-console.log('config', config);
 
 // agregue un comentario
 oracledb.createPool(config)
@@ -59,7 +58,7 @@ async function execute(sql, params) {
   }
 }
 
-const productsdb = makeProductsdb({ logger, execute, querys })
+const productsdb = makeProductsdb({ logger, execute, querys, oracledb })
 
 const easyOracleDb = {
   productsdb

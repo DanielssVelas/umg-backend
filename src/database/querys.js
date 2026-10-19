@@ -10,7 +10,18 @@ const querys = {
     `,
     usuariodb: `
         select * from usuario
-    `
+    `,
+    crearProducto: `
+        CALL LAB1.PR_GESTIONAR_PRODUCTO(
+            :id_producto,
+            :nombre,
+            :precio_compra,
+            :precio_venta,
+            :mensaje,
+            :resultado
+        )
+    `,
+
 }
 
 export default querys
