@@ -5,6 +5,7 @@ import {
 } from '../utils/index.js'
 import makeProductsdb from './makeProductsdb.js'
 import querys from './querys.js'
+import makeSalesdb from './makeSalesdb.js'
 
 const {
   ORACLE_USER,
@@ -59,9 +60,12 @@ async function execute(sql, params) {
 }
 
 const productsdb = makeProductsdb({ logger, execute, querys, oracledb })
+const salesdb = makeSalesdb({ logger, execute, querys, oracledb })
+
 
 const easyOracleDb = {
-  productsdb
+  productsdb,
+  salesdb
 }
 
 export default easyOracleDb

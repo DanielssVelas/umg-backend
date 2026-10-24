@@ -12,7 +12,7 @@ const querys = {
         select * from usuario
     `,
     crearProducto: `
-        CALL LAB1.PR_GESTIONAR_PRODUCTO(
+        CALL PR_GESTIONAR_PRODUCTO(
             :id_producto,
             :nombre,
             :precio_compra,
@@ -21,6 +21,17 @@ const querys = {
             :resultado
         )
     `,
+    registrarVenta: `
+        CALL PR_REGISTRAR_VENTAS(
+            :total,
+            :idCliente,
+            :idUsuario,
+            :idCaja,
+            :detalles,
+            :mensaje,
+            :resultado
+        )
+    `
 
 }
 
