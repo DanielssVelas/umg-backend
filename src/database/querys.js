@@ -1,16 +1,27 @@
 const querys = {
     productsdb: `
-        select * from productos
+        SELECT * FROM PRODUCTOS
     `,
+
     clientedb: `
-        select * from clientes
+        SELECT * FROM CLIENTES
     `,
+
     proveedoredb: `
-        select * from proveedores
+        SELECT
+            ID_PROVEEDOR,
+            NOMBRE,
+            DIRECCION,
+            TELEFONO,
+            NIT
+        FROM PROVEEDORES
+        ORDER BY ID_PROVEEDOR
     `,
+
     usuariodb: `
-        select * from usuario
+        SELECT * FROM USUARIO
     `,
+
     crearProducto: `
         CALL PR_GESTIONAR_PRODUCTO(
             :id_producto,
@@ -21,6 +32,7 @@ const querys = {
             :resultado
         )
     `,
+
     registrarVenta: `
         CALL PR_REGISTRAR_VENTAS(
             :total,
@@ -31,8 +43,19 @@ const querys = {
             :mensaje,
             :resultado
         )
+    `,
+
+    crearProveedor: `
+        BEGIN
+            PR_GESTIONAR_PROVEEDOR(
+                :id_proveedor,
+                :nombre,
+                :direccion,
+                :telefono,
+                :nit
+            );
+        END;
     `
+};
 
-}
-
-export default querys
+export default querys;
