@@ -8,6 +8,8 @@ import makeSalesdb from './makeSalesdb.js'
 import makeProveedoresdb from './makeProveedoresdb.js'
 import querys from './querys.js'
 import makeGestionCajadb from './makeGestionCajadb.js'
+import makeUsuariosdb from './makeUsuariosdb.js';
+import makeAuthdb from './makeAuthdb.js';
 
 const {
   ORACLE_USER,
@@ -92,11 +94,23 @@ const gestionarCajadb = makeGestionCajadb({
   oracledb
 })
 
+const usuariosdb = makeUsuariosdb({
+  logger,
+  execute
+});
+
+// Base de datos de autenticación
+const authdb = makeAuthdb({
+  execute
+});
+
 const easyOracleDb = {
   productsdb,
   salesdb,
   proveedoresdb,
-  gestionarCajadb
+  gestionarCajadb,
+  usuariosdb,
+  authdb
 }
 
 export default easyOracleDb
