@@ -55,6 +55,75 @@ const querys = {
                 :nit
             );
         END;
+    `,
+    gestionarCajadb: `
+        CALL PR_GESTIONAR_CAJA(
+            :p_accion,
+            :p_usuario,
+            :p_nombre,
+            :p_monto_inicial,
+            :p_id_caja,
+            :p_monto_contado,
+            :resultado,
+            :mensaje
+        )
+    `,
+    consultarCajaAbiertaDb: `
+        SELECT
+            C.ID_CAJA AS "idCaja",
+            C.ID_USUARIO AS "idUsuario",
+            C.NOMBRE AS "nombre",
+            C.FECHA_APERTURA AS "fechaApertura",
+            C.MONTO_INICIAL AS "montoInicial",
+            C.ESTADO AS "estado",
+
+            -- Total de ventas
+            NVL((
+                SELECT SUM(V.TOTAL)
+                FROM LAB1.VENTAS V
+                WHERE V.ID_CAJA = C.ID_CAJA
+            ), 0) AS "totalVentas",
+
+            -- Total de entradas
+            NVL((
+                SELECT SUM(M.MONTO)
+                FROM LAB1.MOVIMIENTOS_CAJA M
+                WHERE M.ID_CAJA = C.ID_CAJA
+                AND UPPER(M.TIPO_MOVIMIENTO) = 'ENTRADA'
+            ), 0) AS "entradas",
+
+            -- Total de salidas
+            NVL((
+                SELECT SUM(M.MONTO)
+                FROM LAB1.MOVIMIENTOS_CAJA M
+                WHERE M.ID_CAJA = C.ID_CAJA
+                AND UPPER(M.TIPO_MOVIMIENTO) = 'SALIDA'
+            ), 0) AS "salidas",
+
+            -- Efectivo esperado
+            (
+                C.MONTO_INICIAL
+                + NVL((
+                    SELECT SUM(V.TOTAL)
+                    FROM LAB1.VENTAS V
+                    WHERE V.ID_CAJA = C.ID_CAJA
+                ), 0)
+                + NVL((
+                    SELECT SUM(M.MONTO)
+                    FROM LAB1.MOVIMIENTOS_CAJA M
+                    WHERE M.ID_CAJA = C.ID_CAJA
+                    AND UPPER(M.TIPO_MOVIMIENTO) = 'ENTRADA'
+                ), 0)
+                - NVL((
+                    SELECT SUM(M.MONTO)
+                    FROM LAB1.MOVIMIENTOS_CAJA M
+                    WHERE M.ID_CAJA = C.ID_CAJA
+                    AND UPPER(M.TIPO_MOVIMIENTO) = 'SALIDA'
+                ), 0)
+            ) AS "montoEsperado"
+
+        FROM LAB1.CAJAS C
+        WHERE C.ID_USUARIO = :idUsuario
     `
 };
 
