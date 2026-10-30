@@ -10,6 +10,7 @@ import querys from './querys.js'
 import makeGestionCajadb from './makeGestionCajadb.js'
 import makeComprasdb from './makeComprasdb.js'
 import makeCotizacionesdb from './makeCotizacionesdb.js'
+import makeClientesdb from './makeClientesdb.js'
 
 const {
   ORACLE_USER,
@@ -108,13 +109,20 @@ const cotizacionesdb = makeCotizacionesdb({
   oracledb
 })
 
+const clientesdb = makeClientesdb({
+  logger,
+  execute,
+  querys
+})
+
 const easyOracleDb = {
   productsdb,
   salesdb,
   proveedoresdb,
   gestionarCajadb,
   comprasdb,
-  cotizacionesdb
+  cotizacionesdb,
+  clientesdb
 }
 
 export default easyOracleDb

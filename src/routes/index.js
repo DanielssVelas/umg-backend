@@ -5,6 +5,7 @@ import proveedoresRouter from './proveedoresRouter.js'
 import gestionarCajaRouter from './gestionCajaRouter.js'
 import comprasRouter from './comprasRouter.js'
 import cotizacionesRouter from './cotizacionesRouter.js'
+import clientesRouter from './clientesRouter.js'
 
 const router = Router()
 
@@ -14,5 +15,6 @@ router.use('', proveedoresRouter)
 router.use('', gestionarCajaRouter)
 router.use('', comprasRouter)
 router.use('', cotizacionesRouter)
+router.use('', clientesRouter)
 
 export default router
