@@ -104,7 +104,8 @@ const easyOracleDb = {
   productsdb,
   salesdb,
   proveedoresdb,
-  gestionarCajadb
+  gestionarCajadb,
+  comprasdb
 }
 
 export default easyOracleDb
