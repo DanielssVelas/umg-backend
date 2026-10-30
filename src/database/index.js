@@ -127,7 +127,8 @@ const gestionarCajadb = makeGestionCajadb({
 
 const usuariosdb = makeUsuariosdb({
   logger,
-  execute
+  execute,
+  querys
 });
 
 // Base de datos de autenticación

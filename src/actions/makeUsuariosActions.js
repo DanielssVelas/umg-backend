@@ -20,6 +20,23 @@ export default function makeUsuariosActions({ logger, easyOracleDb }) {
             };
         }
     }
+    async function getModulos(data) {
+        try {
+            logger.info('[makeUsuariosActions][getModulos] -> Starting Actions');
+            const rows = await easyOracleDb.usuariosdb.getModulosdb(data);
+            logger.info(`[makeUsuariosActions][getModulos] -> Retrieved ${rows.length} users`)
+            return {
+                statusCode: 200,
+                resp: { flag: true, rows }
+            };
+        } catch (error) {
+            logger.error(`[makeUsuariosActions][getModulos] -> Has occurred error: ${error}`)
+            return {
+                statusCode: 500,
+                resp: { flag: false, mensaje: 'Error al consultar usuarios' }
+            };
+        }
+    }
 
     async function getRoles() {
         try {
@@ -147,6 +164,7 @@ export default function makeUsuariosActions({ logger, easyOracleDb }) {
         getUsuarios,
         getRoles,
         createUsuario,
-        updateUsuario
+        updateUsuario,
+        getModulos
     });
 }

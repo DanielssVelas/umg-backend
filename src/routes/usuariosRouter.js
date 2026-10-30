@@ -13,6 +13,12 @@ router.get(
 );
 
 router.get(
+  '/modulos/:idRol',
+  requireAuth,
+  routerCallback(usuariosController.getModulosController)
+);
+
+router.get(
   '/usuarios/roles',
   requireAuth,
   allowRoles('ADMINISTRADOR'),

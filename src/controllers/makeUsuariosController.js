@@ -18,6 +18,24 @@ export default function makeUsuariosController({ logger, usuariosActions }) {
             };
         }
     }
+    async function getModulosController(request) {
+        try {
+            logger.info('[makeUsuariosController][getModulosController] -> Starting Controller');
+            const result = await usuariosActions.getModulos(request.params);
+            logger.info(`[makeUsuariosController][getModulosController] -> Response status: ${result.statusCode}`);
+
+            return {
+                status: result.statusCode,
+                body: result.resp
+            };
+        } catch (error) {
+            logger.error(`[makeUsuariosController][getUsuariosController] -> Has occurred error: ${error}`);
+            return {
+                status: 500,
+                body: { flag: false, mensaje: 'Error al consultar usuarios' }
+            };
+        }
+    }
 
     async function getRolesController() {
         try {
@@ -83,6 +101,7 @@ export default function makeUsuariosController({ logger, usuariosActions }) {
         getUsuariosController,
         getRolesController,
         createUsuarioController,
-        updateUsuarioController
+        updateUsuarioController,
+        getModulosController
     });
 }

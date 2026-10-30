@@ -1,5 +1,5 @@
 
-export default function makeUsuariosdb({ logger, execute }) {
+export default function makeUsuariosdb({ logger, execute, querys }) {
     async function getUsuarios() {
         try {
             logger.info('[makeUsuariosdb][getUsuarios] -> Starting query');
@@ -111,10 +111,22 @@ export default function makeUsuariosdb({ logger, execute }) {
         }
     }
 
+    async function getModulosdb(params) {
+        try {
+            logger.info('[oracle][makeProductsdb][getModulosdb] -> starting DB')
+            const queri = querys.modulosdb
+            const result =  await execute(queri, [params.idRol])
+            return result?.rows.length > 0 ? result.rows : []
+        } catch (error) {
+            logger.error(`[oracle][makeProductsdb][getModulosdb] ${e}`)
+            return []
+        }
+    }
     return Object.freeze({
         getUsuarios,
         getRoles,
         createUsuario,
-        updateUsuario
+        updateUsuario,
+        getModulosdb
     });
 }
