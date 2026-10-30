@@ -22,4 +22,10 @@ router.get(
     routerCallback(cotizacionesController.getDetalleCotizacionController)
 )
 
+// Convertimos la cotizacion en venta
+router.post(
+    '/convertir-cotizacion/:idCotizacion',
+    routerCallback(cotizacionesController.convertirCotizacionEnVentaController)
+);
+
 export default router

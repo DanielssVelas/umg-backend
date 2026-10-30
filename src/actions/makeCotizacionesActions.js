@@ -81,9 +81,40 @@ export default function makeCotizacionesActions({ logger, easyOracleDb }) {
         }
     }
 
+    // Convertir cotización en venta
+    async function convertirCotizacionEnVentaAction(data) {
+        try {
+            logger.info('[actions][makeCotizacionesActions][convertirCotizacionEnVentaAction] -> starting');
+
+            const result = await easyOracleDb.cotizacionesdb.convertirCotizacionEnVenta(
+                data.idCotizacion,
+                data.idUsuario,
+                data.idCaja
+            );
+
+            return {
+                statusCode: result.flag ? 200 : 400,
+                resp: result
+            };
+
+        } catch (error) {
+            logger.error(`[actions][makeCotizacionesActions][convertirCotizacionEnVentaAction] ${error}`);
+
+            return {
+                statusCode: 500,
+                resp: {
+                    flag: false,
+                    mensaje: 'Error al convertir la cotización en venta'
+                }
+            };
+        }
+    }
+
+
     return Object.freeze({
         crearCotizacionAction,
         getHistorialCotizacionesAction,
-        getDetalleCotizacionAction
+        getDetalleCotizacionAction,
+        convertirCotizacionEnVentaAction
     });
 }

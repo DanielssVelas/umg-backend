@@ -124,8 +124,9 @@ const querys = {
 
         FROM LAB1.CAJAS C
         WHERE C.ID_USUARIO = :idUsuario
-    `
-    ,
+        AND UPPER(C.ESTADO) = 'ABIERTA'
+        ORDER BY C.FECHA_APERTURA DESC
+    `,
     registrarCompra: `
     BEGIN
         PR_REGISTRAR_COMPRAS(
@@ -264,6 +265,24 @@ detalleHistorialCotizacionesdb: `
         ON P.ID_PRODUCTO = D.ID_PRODUCTO
     WHERE D.ID_COTIZACION = :idCotizacion
     ORDER BY D.ID_DETALLE_COTIZACION
+`,
+obtenerCotizacionParaConversion: `
+    SELECT
+        ID_COTIZACION,
+        ID_CLIENTE,
+        ID_USUARIO,
+        TOTAL,
+        ESTADO
+    FROM COTIZACIONES
+    WHERE ID_COTIZACION = :idCotizacion
+    FOR UPDATE
+`,
+
+actualizarEstadoCotizacion: `
+    UPDATE COTIZACIONES
+    SET ESTADO = 'ACEPTADA'
+    WHERE ID_COTIZACION = :idCotizacion
+      AND ESTADO = 'PENDIENTE'
 `,
 };
 

@@ -67,6 +67,35 @@ async function execute(sql, params) {
   }
 }
 
+async function executeTransaction(callback) {
+  let conn;
+
+  try {
+    conn = await oracledb.getConnection();
+
+    const result = await callback(conn);
+
+    await conn.commit();
+
+    return result;
+  } catch (error) {
+    if (conn) {
+      try {
+        await conn.rollback();
+      } catch (rollbackError) {
+        logger.error(`[executeTransaction][rollback] ${rollbackError}`);
+      }
+    }
+
+    logger.error(`[executeTransaction][catch] ${error}`);
+    throw error;
+  } finally {
+    if (conn) {
+      await conn.close();
+    }
+  }
+}
+
 const productsdb = makeProductsdb({
   logger,
   execute,
@@ -105,6 +134,7 @@ const comprasdb = makeComprasdb({
 const cotizacionesdb = makeCotizacionesdb({
   logger,
   execute,
+  executeTransaction,
   querys,
   oracledb
 })
