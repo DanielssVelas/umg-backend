@@ -8,6 +8,7 @@ import makeSalesdb from './makeSalesdb.js'
 import makeProveedoresdb from './makeProveedoresdb.js'
 import querys from './querys.js'
 import makeGestionCajadb from './makeGestionCajadb.js'
+import makeComprasdb from './makeComprasdb.js'
 
 const {
   ORACLE_USER,
@@ -90,6 +91,13 @@ const gestionarCajadb = makeGestionCajadb({
   execute,
   querys,
   oracledb
+})
+
+const comprasdb = makeComprasdb({
+    logger,
+    execute,
+    querys,
+    oracledb
 })
 
 const easyOracleDb = {

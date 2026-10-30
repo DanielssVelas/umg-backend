@@ -125,6 +125,22 @@ const querys = {
         FROM LAB1.CAJAS C
         WHERE C.ID_USUARIO = :idUsuario
     `
+    ,
+    registrarCompra: `
+    BEGIN
+        PR_REGISTRAR_COMPRAS(
+            :p_total,
+            :p_proveedor,
+            :p_usuario,
+            :p_tipo_comprobante,
+            :p_serie,
+            :p_numero_comprobante,
+            :p_detalles,
+            :p_mensaje,
+            :p_resultado
+        );
+    END;
+`,
 };
 
 export default querys;
