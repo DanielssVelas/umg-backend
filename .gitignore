@@ -6,6 +6,11 @@ package-lock.json
 .env
 .env.*
 !.env.example
+secrets.yml
+etc/**/.env
+etc/**/secrets.yml
+!etc/**/.env.example
+!etc/**/secrets.example.yml
 
 # Claves privadas y certificados
 *.pem

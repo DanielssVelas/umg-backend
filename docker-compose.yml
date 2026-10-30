@@ -1,0 +1,31 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: umg_backend
+    restart: unless-stopped
+    ports:
+      - "${PORT:-4001}:${PORT:-4001}"
+    env_file:
+      - ${ENV_FILE:-etc/main/.env}
+    environment:
+      - NODE_ENV=${NODE_ENV:-production}
+      - PORT=${PORT:-4001}
+    volumes:
+      - files_storage:/app/files
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    networks:
+      - umg_network
+
+volumes:
+  files_storage:
+    driver: local
+
+networks:
+  umg_network:
+    driver: bridge

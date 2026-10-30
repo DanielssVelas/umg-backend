@@ -1,6 +1,12 @@
 import dotenv from 'dotenv'
+import fs from 'fs'
 
-dotenv.config()
+// Priorizar archivo específico en etc/ (ej: etc/main/.env o etc/dev/.env) si existe
+const targetEnv = process.env.ENV_FILE || (process.env.NODE_ENV === 'production' ? 'etc/main/.env' : 'etc/dev/.env')
+if (fs.existsSync(targetEnv)) {
+    dotenv.config({ path: targetEnv })
+}
+dotenv.config() // Fallback o carga de variables de la raíz (.env)
 
 const env = {
     NODE_ENV: process.env.NODE_ENV || 'development',
