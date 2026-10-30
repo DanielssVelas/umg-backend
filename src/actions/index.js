@@ -6,18 +6,20 @@ import makeSalesActions from './makeSalesActions.js'
 import makeProveedoresActions from './makeProveedoresActions.js'
 import makeGestionarCajaActions from './makeGestionarCajaActions.js'
 import makeComprasActions from './makeComprasActions.js'
+import makeCotizacionesActions from './makeCotizacionesActions.js'
 
 const productsActions = makeProductsActions({ logger, easyOracleDb })
 const salesActions = makeSalesActions({ logger, easyOracleDb })
 const proveedoresActions = makeProveedoresActions({ logger, easyOracleDb })
 const gestionarCajaActions = makeGestionarCajaActions({ logger, easyOracleDb })
 const comprasActions = makeComprasActions({ logger, easyOracleDb })
-
+const cotizacionesActions = makeCotizacionesActions({ logger, easyOracleDb })
 
 export {
     productsActions,
     salesActions,
     proveedoresActions,
     gestionarCajaActions,
-    comprasActions
+    comprasActions,
+    cotizacionesActions
 }

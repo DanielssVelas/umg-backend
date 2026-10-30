@@ -3,7 +3,8 @@ import {
   salesActions,
   proveedoresActions,
   gestionarCajaActions,
-  comprasActions
+  comprasActions,
+  cotizacionesActions
 } from '../actions/index.js'
 
 import { logger } from '../utils/index.js'
@@ -13,6 +14,7 @@ import makeSalesController from './makeSalesControllers.js'
 import makeProveedoresController from './makeProveedoresController.js'
 import makeGestionarCajaController from './makeGestionarCajaController.js'
 import makeComprasController from './makeComprasController.js'
+import makeCotizacionesController from './makeCotizacionesController.js'
 
 const productsController = makeProductsController({
   logger,
@@ -35,8 +37,13 @@ const gestionarCajaController = makeGestionarCajaController({
 })
 
 const comprasController = makeComprasController({
-    logger,
-    comprasActions
+  logger,
+  comprasActions
+})
+
+const cotizacionesController = makeCotizacionesController({
+  logger,
+  cotizacionesActions
 })
 
 export {
@@ -44,5 +51,6 @@ export {
   salesController,
   proveedoresController,
   gestionarCajaController,
-  comprasController
+  comprasController,
+  cotizacionesController
 }
