@@ -101,6 +101,7 @@ const usuariosdb = makeUsuariosdb({
 
 // Base de datos de autenticación
 const authdb = makeAuthdb({
+  logger,
   execute
 });
 

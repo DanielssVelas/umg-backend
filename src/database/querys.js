@@ -124,6 +124,7 @@ const querys = {
 
         FROM LAB1.CAJAS C
         WHERE C.ID_USUARIO = :idUsuario
+        ORDER BY 1 DESC
     `
 };
 

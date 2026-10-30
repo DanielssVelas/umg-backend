@@ -37,11 +37,13 @@ const gestionarCajaController = makeGestionarCajaController({
 })
 
 const usuariosController = makeUsuariosController({
+  logger,
   usuariosActions
 });
 
 
 const authController = makeAuthController({
+  logger,
   authActions
 });
 
