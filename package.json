@@ -28,5 +28,8 @@
   },
   "devDependencies": {
     "nodemon": "^3.1.14"
+  },
+  "allowScripts": {
+    "oracledb@26.0.0": true
   }
 }

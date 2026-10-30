@@ -4,8 +4,10 @@ import {
   logger
 } from '../utils/index.js'
 import makeProductsdb from './makeProductsdb.js'
-import querys from './querys.js'
 import makeSalesdb from './makeSalesdb.js'
+import makeProveedoresdb from './makeProveedoresdb.js'
+import querys from './querys.js'
+import makeGestionCajadb from './makeGestionCajadb.js'
 
 const {
   ORACLE_USER,
@@ -17,6 +19,7 @@ const {
   ORACLE_POOL_TIMEOUT,
   ORACLE_CALL_TIMEOUT
 } = env
+
 const config = {
   user: ORACLE_USER,
   password: ORACLE_PASSWORD,
@@ -28,20 +31,22 @@ const config = {
   poolAlias: 'default'
 }
 
-// agregue un comentario
 oracledb.createPool(config)
 
 async function execute(sql, params) {
   let conn
   const parameters = params || []
+
   try {
     oracledb.queueTimeout = 3000
     conn = await oracledb.getConnection()
+
     const result = await conn.execute(sql, parameters, {
       outFormat: oracledb.OBJECT,
       autoCommit: true,
       callTimeout: ORACLE_CALL_TIMEOUT
     })
+
     return result
   } catch (e) {
     logger.error(`[easyport-oracle][execute][catch] ${e}`)
@@ -59,13 +64,39 @@ async function execute(sql, params) {
   }
 }
 
-const productsdb = makeProductsdb({ logger, execute, querys, oracledb })
-const salesdb = makeSalesdb({ logger, execute, querys, oracledb })
+const productsdb = makeProductsdb({
+  logger,
+  execute,
+  querys,
+  oracledb
+})
 
+const salesdb = makeSalesdb({
+  logger,
+  execute,
+  querys,
+  oracledb
+})
+
+const proveedoresdb = makeProveedoresdb({
+  logger,
+  execute,
+  querys,
+  oracledb
+})
+
+const gestionarCajadb = makeGestionCajadb({
+  logger,
+  execute,
+  querys,
+  oracledb
+})
 
 const easyOracleDb = {
   productsdb,
-  salesdb
+  salesdb,
+  proveedoresdb,
+  gestionarCajadb
 }
 
 export default easyOracleDb
