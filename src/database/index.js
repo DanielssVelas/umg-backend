@@ -1,15 +1,14 @@
+
 import oracledb from 'oracledb'
 import env from '../config/env.js'
-import {
-  logger
-} from '../utils/index.js'
+import { logger } from '../utils/index.js'
 import makeProductsdb from './makeProductsdb.js'
 import makeSalesdb from './makeSalesdb.js'
 import makeProveedoresdb from './makeProveedoresdb.js'
 import querys from './querys.js'
 import makeGestionCajadb from './makeGestionCajadb.js'
-import makeUsuariosdb from './makeUsuariosdb.js';
-import makeAuthdb from './makeAuthdb.js';
+import makeUsuariosdb from './makeUsuariosdb.js'
+import makeAuthdb from './makeAuthdb.js'
 import makeComprasdb from './makeComprasdb.js'
 import makeCotizacionesdb from './makeCotizacionesdb.js'
 import makeClientesdb from './makeClientesdb.js'
@@ -36,7 +35,22 @@ const config = {
   poolAlias: 'default'
 }
 
-oracledb.createPool(config)
+// Inicialización diferida del pool de Oracle
+let poolPromise = null
+
+async function getConnection() {
+  if (!ORACLE_CONNECT_STRING || !ORACLE_CONNECT_STRING.trim()) {
+    throw new Error('Oracle no está configurado en el servidor')
+  }
+
+  if (!poolPromise) {
+    poolPromise = oracledb.createPool(config)
+  }
+
+  await poolPromise
+
+  return oracledb.getConnection()
+}
 
 async function execute(sql, params) {
   let conn
@@ -44,7 +58,7 @@ async function execute(sql, params) {
 
   try {
     oracledb.queueTimeout = 3000
-    conn = await oracledb.getConnection()
+    conn = await getConnection()
 
     const result = await conn.execute(sql, parameters, {
       outFormat: oracledb.OBJECT,
@@ -70,33 +84,34 @@ async function execute(sql, params) {
 }
 
 async function executeTransaction(callback) {
-  let conn;
+  let conn
 
   try {
-    conn = await oracledb.getConnection();
+    conn = await getConnection()
 
-    const result = await callback(conn);
+    const result = await callback(conn)
 
-    await conn.commit();
+    await conn.commit()
 
-    return result;
+    return result
   } catch (error) {
     if (conn) {
       try {
-        await conn.rollback();
+        await conn.rollback()
       } catch (rollbackError) {
-        logger.error(`[executeTransaction][rollback] ${rollbackError}`);
+        logger.error(`[executeTransaction][rollback] ${rollbackError}`)
       }
     }
 
-    logger.error(`[executeTransaction][catch] ${error}`);
-    throw error;
+    logger.error(`[executeTransaction][catch] ${error}`)
+    throw error
   } finally {
     if (conn) {
-      await conn.close();
+      await conn.close()
     }
   }
 }
+
 const productsdb = makeProductsdb({
   logger,
   execute,
@@ -129,19 +144,18 @@ const usuariosdb = makeUsuariosdb({
   logger,
   execute,
   querys
-});
+})
 
-// Base de datos de autenticación
 const authdb = makeAuthdb({
   logger,
   execute
-});
+})
 
 const comprasdb = makeComprasdb({
-    logger,
-    execute,
-    querys,
-    oracledb
+  logger,
+  execute,
+  querys,
+  oracledb
 })
 
 const cotizacionesdb = makeCotizacionesdb({
