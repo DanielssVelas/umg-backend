@@ -20,9 +20,8 @@ app.use(express.json())
 app.use(router)
 app.disable('x-powered-by')
 
-const server = app.listen(SERVER_PORT, (e) => {
-  if (e) throw e
-  console.log('Server running on port:', process.env.PORT)
+const server = app.listen(SERVER_PORT, '0.0.0.0', () => {
+  console.log(`Server running on port: ${SERVER_PORT}`)
 })
 
 server.timeout = parseInt(SERVER_TIMEOUT, 10) * 1000 || 90000
