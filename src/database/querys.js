@@ -285,18 +285,19 @@ const querys = {
     `,
     modulosdb: `
         SELECT
-            M.ID_MODULO,
-            M.NOMBRE,
-            M.RUTA,
-            M.ICONO,
-            M.ESTADO
-        FROM LAB1.MODULOS M
-        INNER JOIN LAB1.ROL_MODULOS RM
-            ON RM.ID_MODULO = M.ID_MODULO
-        WHERE RM.ID_ROL = :idRol
-        AND RM.ESTADO = 'A'
-        AND M.ESTADO = 'A'
-        ORDER BY M.ID_MODULO
+        M.ID_MODULO,
+        M.NOMBRE,
+        M.RUTA,
+        M.ICONO,
+        M.ESTADO,
+        M.ORDEN
+    FROM LAB1.MODULOS M
+    INNER JOIN LAB1.ROL_MODULOS RM
+        ON RM.ID_MODULO = M.ID_MODULO
+    WHERE RM.ID_ROL = :id_rol
+    AND RM.ESTADO = 'A'
+    AND M.ESTADO = 'A'
+    ORDER BY M.ORDEN ASC
     `,
 };
 
