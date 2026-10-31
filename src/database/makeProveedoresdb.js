@@ -59,8 +59,51 @@ export default function makeProveedoresdb({
         }
     }
 
+    // ACTUALIZAR PROVEEDOR
+    async function updateProveedor({
+        idProveedor,
+        nombre,
+        direccion,
+        telefono,
+        nit
+    }) {
+        try {
+            logger.info(
+                '[makeProveedoresdb][updateProveedor] -> Actualizando proveedor'
+            );
+
+            const sql = `
+                UPDATE PROVEEDORES
+                SET
+                    NOMBRE = :1,
+                    DIRECCION = :2,
+                    TELEFONO = :3,
+                    NIT = :4
+                WHERE ID_PROVEEDOR = :5
+            `;
+
+            const result = await execute(sql, [
+                nombre,
+                direccion,
+                telefono,
+                nit || null,
+                idProveedor
+            ]);
+
+            return result;
+
+        } catch (error) {
+            logger.error(
+                `[makeProveedoresdb][updateProveedor] Error: ${error}`
+            );
+
+            throw error;
+        }
+    }
+
     return Object.freeze({
         getProveedores,
-        createProveedor
+        createProveedor,
+        updateProveedor
     });
 }
