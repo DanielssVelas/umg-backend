@@ -45,10 +45,10 @@ export default function makeUsuariosdb({ logger, execute, querys }) {
             logger.info(`[makeUsuariosdb][createUsuario] -> Starting insert for user: ${usuario}`);
             const sql = `
                 INSERT INTO USUARIO (
-                    ID_USUARIO, USUARIO, PASSWORD, ESTADO, ID_ROL
+                    USUARIO, PASSWORD, ESTADO, ID_ROL
                 )
                 VALUES (
-                    SEQ_USUARIO.NEXTVAL, :usuario, :password, :estado, :id_rol
+                    :usuario, :password, :estado, :id_rol
                 )
             `;
             await execute(sql, {
