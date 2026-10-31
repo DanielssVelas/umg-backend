@@ -8,6 +8,11 @@ import makeSalesdb from './makeSalesdb.js'
 import makeProveedoresdb from './makeProveedoresdb.js'
 import querys from './querys.js'
 import makeGestionCajadb from './makeGestionCajadb.js'
+import makeUsuariosdb from './makeUsuariosdb.js';
+import makeAuthdb from './makeAuthdb.js';
+import makeComprasdb from './makeComprasdb.js'
+import makeCotizacionesdb from './makeCotizacionesdb.js'
+import makeClientesdb from './makeClientesdb.js'
 
 const {
   ORACLE_USER,
@@ -64,6 +69,34 @@ async function execute(sql, params) {
   }
 }
 
+async function executeTransaction(callback) {
+  let conn;
+
+  try {
+    conn = await oracledb.getConnection();
+
+    const result = await callback(conn);
+
+    await conn.commit();
+
+    return result;
+  } catch (error) {
+    if (conn) {
+      try {
+        await conn.rollback();
+      } catch (rollbackError) {
+        logger.error(`[executeTransaction][rollback] ${rollbackError}`);
+      }
+    }
+
+    logger.error(`[executeTransaction][catch] ${error}`);
+    throw error;
+  } finally {
+    if (conn) {
+      await conn.close();
+    }
+  }
+}
 const productsdb = makeProductsdb({
   logger,
   execute,
@@ -92,11 +125,49 @@ const gestionarCajadb = makeGestionCajadb({
   oracledb
 })
 
+const usuariosdb = makeUsuariosdb({
+  logger,
+  execute,
+  querys
+});
+
+// Base de datos de autenticación
+const authdb = makeAuthdb({
+  logger,
+  execute
+});
+
+const comprasdb = makeComprasdb({
+    logger,
+    execute,
+    querys,
+    oracledb
+})
+
+const cotizacionesdb = makeCotizacionesdb({
+  logger,
+  execute,
+  executeTransaction,
+  querys,
+  oracledb
+})
+
+const clientesdb = makeClientesdb({
+  logger,
+  execute,
+  querys
+})
+
 const easyOracleDb = {
   productsdb,
   salesdb,
   proveedoresdb,
-  gestionarCajadb
+  gestionarCajadb,
+  usuariosdb,
+  authdb,
+  comprasdb,
+  cotizacionesdb,
+  clientesdb
 }
 
 export default easyOracleDb

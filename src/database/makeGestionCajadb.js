@@ -15,6 +15,8 @@ export default function makeGestionCajadb({ logger, execute, querys, oracledb })
     async function createGestionCajadb(data) {
         try {
             logger.info('[oracle][makeGestionCajadb][createGestionCajadb] -> starting DB');
+            console.log('data', data);
+            
             const query = querys.gestionarCajadb
 
             const result = await execute(query, {

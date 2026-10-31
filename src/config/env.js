@@ -15,6 +15,8 @@ const env = {
     ORACLE_POOL_INCREMENT: parseInt(process.env.ORACLE_POOL_INCREMENT, 10) || 1,
     ORACLE_POOL_TIMEOUT: parseInt(process.env.ORACLE_POOL_TIMEOUT, 10) || 0,
     ORACLE_CALL_TIMEOUT: parseInt(process.env.ORACLE_CALL_TIMEOUT, 10) || 30000,
+    JWT_SECRET: process.env.JWT_SECRET || '',
 }
+
 
 export default env

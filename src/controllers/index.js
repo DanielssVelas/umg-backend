@@ -2,7 +2,12 @@ import {
   productsActions,
   salesActions,
   proveedoresActions,
-  gestionarCajaActions
+  gestionarCajaActions,
+  usuariosActions,
+  authActions,
+  comprasActions,
+  cotizacionesActions,
+  clientesActions
 } from '../actions/index.js'
 
 import { logger } from '../utils/index.js'
@@ -11,6 +16,11 @@ import makeProductsController from './makeProductsController.js'
 import makeSalesController from './makeSalesControllers.js'
 import makeProveedoresController from './makeProveedoresController.js'
 import makeGestionarCajaController from './makeGestionarCajaController.js'
+import makeUsuariosController from './makeUsuariosController.js';
+import makeAuthController from './makeAuthController.js';
+import makeComprasController from './makeComprasController.js'
+import makeCotizacionesController from './makeCotizacionesController.js'
+import makeClientesController from './makeClientesController.js'
 
 const productsController = makeProductsController({
   logger,
@@ -32,9 +42,40 @@ const gestionarCajaController = makeGestionarCajaController({
   gestionarCajaActions
 })
 
+const usuariosController = makeUsuariosController({
+  logger,
+  usuariosActions
+});
+
+
+const authController = makeAuthController({
+  logger,
+  authActions
+});
+
+const comprasController = makeComprasController({
+  logger,
+  comprasActions
+})
+
+const cotizacionesController = makeCotizacionesController({
+  logger,
+  cotizacionesActions
+})
+
+const clientesController = makeClientesController({
+  logger,
+  clientesActions
+})
+
 export {
   productsController,
   salesController,
   proveedoresController,
-  gestionarCajaController
+  gestionarCajaController,
+  authController,
+  usuariosController,
+  comprasController,
+  cotizacionesController,
+  clientesController
 }
