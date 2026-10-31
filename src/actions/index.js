@@ -10,6 +10,7 @@ import makeAuthActions from './makeAuthActions.js';
 import makeComprasActions from './makeComprasActions.js'
 import makeCotizacionesActions from './makeCotizacionesActions.js'
 import makeClientesActions from './makeClientesActions.js'
+import makeHealtActions from './makeHealtActions.js'
 
 const productsActions = makeProductsActions({ logger, easyOracleDb })
 const salesActions = makeSalesActions({ logger, easyOracleDb })
@@ -30,6 +31,7 @@ const authActions = makeAuthActions({
 const comprasActions = makeComprasActions({ logger, easyOracleDb })
 const cotizacionesActions = makeCotizacionesActions({ logger, easyOracleDb })
 const clientesActions = makeClientesActions({ logger, easyOracleDb })
+const healtActions = makeHealtActions({ logger })
 
 export {
     productsActions,
@@ -40,5 +42,6 @@ export {
     authActions,
     comprasActions,
     cotizacionesActions,
-    clientesActions
+    clientesActions,
+    healtActions
 }

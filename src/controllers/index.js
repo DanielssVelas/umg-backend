@@ -7,7 +7,8 @@ import {
   authActions,
   comprasActions,
   cotizacionesActions,
-  clientesActions
+  clientesActions,
+  healtActions
 } from '../actions/index.js'
 
 import { logger } from '../utils/index.js'
@@ -21,6 +22,7 @@ import makeAuthController from './makeAuthController.js';
 import makeComprasController from './makeComprasController.js'
 import makeCotizacionesController from './makeCotizacionesController.js'
 import makeClientesController from './makeClientesController.js'
+import makeHealtController from './makeHealtController.js'
 
 const productsController = makeProductsController({
   logger,
@@ -68,6 +70,11 @@ const clientesController = makeClientesController({
   clientesActions
 })
 
+const healtController = makeHealtController({
+  logger,
+  healtActions
+})
+
 export {
   productsController,
   salesController,
@@ -77,5 +84,6 @@ export {
   usuariosController,
   comprasController,
   cotizacionesController,
-  clientesController
+  clientesController,
+  healtController
 }

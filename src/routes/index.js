@@ -8,6 +8,7 @@ import authRouter from './authRouter.js';
 import comprasRouter from './comprasRouter.js'
 import cotizacionesRouter from './cotizacionesRouter.js'
 import clientesRouter from './clientesRouter.js'
+import healtRouter from './healtRouter.js'
 
 const router = Router()
 
@@ -20,5 +21,6 @@ router.use('', authRouter)
 router.use('', comprasRouter)
 router.use('', cotizacionesRouter)
 router.use('', clientesRouter)
+router.use('', healtRouter)
 
 export default router
