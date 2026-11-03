@@ -16,14 +16,12 @@ export default function makeClientesdb({ logger, execute, querys }) {
   async function crearCliente(cliente) {
     const sql = `
       INSERT INTO CLIENTES (
-        ID_CLIENTE,
         NOMBRE,
         DIRECCION,
         TELEFONO,
         CORREO
       )
       VALUES (
-        SEQ_CLIENTES.NEXTVAL,
         :nombre,
         :direccion,
         :telefono,
