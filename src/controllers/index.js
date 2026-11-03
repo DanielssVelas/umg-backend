@@ -8,7 +8,8 @@ import {
   comprasActions,
   cotizacionesActions,
   clientesActions,
-  healtActions
+  healtActions,
+  kardexActions
 } from '../actions/index.js'
 
 import { logger } from '../utils/index.js'
@@ -17,12 +18,13 @@ import makeProductsController from './makeProductsController.js'
 import makeSalesController from './makeSalesControllers.js'
 import makeProveedoresController from './makeProveedoresController.js'
 import makeGestionarCajaController from './makeGestionarCajaController.js'
-import makeUsuariosController from './makeUsuariosController.js';
-import makeAuthController from './makeAuthController.js';
+import makeUsuariosController from './makeUsuariosController.js'
+import makeAuthController from './makeAuthController.js'
 import makeComprasController from './makeComprasController.js'
 import makeCotizacionesController from './makeCotizacionesController.js'
 import makeClientesController from './makeClientesController.js'
 import makeHealtController from './makeHealtController.js'
+import makeKardexController from './makeKardexController.js'
 
 const productsController = makeProductsController({
   logger,
@@ -47,13 +49,12 @@ const gestionarCajaController = makeGestionarCajaController({
 const usuariosController = makeUsuariosController({
   logger,
   usuariosActions
-});
-
+})
 
 const authController = makeAuthController({
   logger,
   authActions
-});
+})
 
 const comprasController = makeComprasController({
   logger,
@@ -75,6 +76,12 @@ const healtController = makeHealtController({
   healtActions
 })
 
+// CONTROLADOR DEL KARDEX
+const kardexController = makeKardexController({
+  logger,
+  kardexActions
+})
+
 export {
   productsController,
   salesController,
@@ -85,5 +92,6 @@ export {
   comprasController,
   cotizacionesController,
   clientesController,
-  healtController
+  healtController,
+  kardexController
 }

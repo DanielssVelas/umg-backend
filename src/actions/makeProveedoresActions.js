@@ -1,4 +1,8 @@
 export default function makeProveedoresActions({ logger, easyOracleDb }) {
+
+  // ==========================================
+  // CONSULTAR PROVEEDORES
+  // ==========================================
   async function getProveedoresActions() {
     try {
       logger.info(
@@ -15,6 +19,7 @@ export default function makeProveedoresActions({ logger, easyOracleDb }) {
           rows: result,
         },
       };
+
     } catch (error) {
       logger.error(
         `[makeProveedoresActions][getProveedoresActions] Error: ${error}`
@@ -31,6 +36,9 @@ export default function makeProveedoresActions({ logger, easyOracleDb }) {
     }
   }
 
+  // ==========================================
+  // REGISTRAR PROVEEDOR
+  // ==========================================
   async function createProveedorAction(data) {
     try {
       logger.info(
@@ -43,6 +51,7 @@ export default function makeProveedoresActions({ logger, easyOracleDb }) {
         statusCode: 201,
         resp: result
       };
+
     } catch (error) {
       logger.error(
         `[makeProveedoresActions][createProveedorAction] Error: ${error}`
@@ -58,8 +67,77 @@ export default function makeProveedoresActions({ logger, easyOracleDb }) {
     }
   }
 
+  // ==========================================
+  // EDITAR PROVEEDOR
+  // ==========================================
+  async function updateProveedorAction(data) {
+    try {
+      logger.info(
+        '[makeProveedoresActions][updateProveedorAction] -> Actualizando proveedor'
+      );
+
+      if (
+        !data.idProveedor ||
+        !data.nombre?.trim() ||
+        !data.direccion?.trim() ||
+        !data.telefono?.trim()
+      ) {
+        return {
+          statusCode: 400,
+          resp: {
+            flag: false,
+            mensaje: 'Completa los datos obligatorios del proveedor',
+          },
+        };
+      }
+
+      const result = await easyOracleDb.proveedoresdb.updateProveedor({
+        idProveedor: data.idProveedor,
+        nombre: data.nombre.trim(),
+        direccion: data.direccion.trim(),
+        telefono: data.telefono.trim(),
+        nit: data.nit?.trim() || null,
+      });
+
+      if (!result || result.rowsAffected === 0) {
+        return {
+          statusCode: 404,
+          resp: {
+            flag: false,
+            mensaje: 'No se encontró el proveedor',
+          },
+        };
+      }
+
+      return {
+        statusCode: 200,
+        resp: {
+          flag: true,
+          mensaje: 'Proveedor actualizado correctamente',
+        },
+      };
+
+    } catch (error) {
+      logger.error(
+        `[makeProveedoresActions][updateProveedorAction] Error: ${error}`
+      );
+
+      return {
+        statusCode: 500,
+        resp: {
+          flag: false,
+          mensaje: 'Error al actualizar proveedor',
+        },
+      };
+    }
+  }
+
+  // ==========================================
+  // EXPORTAR FUNCIONES
+  // ==========================================
   return Object.freeze({
     getProveedoresActions,
     createProveedorAction,
+    updateProveedorAction,
   });
 }

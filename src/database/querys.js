@@ -281,6 +281,48 @@ const querys = {
         WHERE ID_COTIZACION = :idCotizacion
         AND ESTADO = 'PENDIENTE'
     `,
+    // ==========================================
+    // KARDEX
+    // ==========================================
+
+    kardexdb: `
+        SELECT
+            K.ID_MOVIMIENTO,
+            K.ID_PRODUCTO,
+            P.NOMBRE AS PRODUCTO,
+            K.FECHA_MOVIMIENTO,
+            K.TIPO_MOVIMIENTO,
+            K.TIPO_DOCUMENTO,
+            K.NUMERO_DOCUMENTO,
+            K.ENTRADA,
+            K.SALIDA,
+            K.EXISTENCIA_RESULTANTE,
+            K.COSTO_UNITARIO,
+            K.COSTO_TOTAL,
+            K.ID_USUARIO,
+            U.USUARIO
+        FROM KARDEX K
+        INNER JOIN PRODUCTOS P
+            ON P.ID_PRODUCTO = K.ID_PRODUCTO
+        LEFT JOIN USUARIO U
+            ON U.ID_USUARIO = K.ID_USUARIO
+        WHERE (:idProducto IS NULL OR K.ID_PRODUCTO = :idProducto)
+          AND (:tipoMovimiento IS NULL OR K.TIPO_MOVIMIENTO = :tipoMovimiento)
+          AND (:fechaInicio IS NULL OR K.FECHA_MOVIMIENTO >= TO_DATE(:fechaInicio, 'YYYY-MM-DD'))
+          AND (:fechaFin IS NULL OR K.FECHA_MOVIMIENTO < TO_DATE(:fechaFin, 'YYYY-MM-DD') + 1)
+        ORDER BY K.FECHA_MOVIMIENTO DESC, K.ID_MOVIMIENTO DESC
+    `,
+
+    kardexExistenciasdb: `
+        SELECT
+            P.ID_PRODUCTO,
+            P.NOMBRE AS PRODUCTO,
+            NVL(P.STOCK, 0) AS EXISTENCIA,
+            P.PRECIO_COMPRA AS COSTO_PROMEDIO,
+            NVL(P.STOCK, 0) * NVL(P.PRECIO_COMPRA, 0) AS VALOR_INVENTARIO
+        FROM PRODUCTOS P
+        ORDER BY P.NOMBRE
+    `,
     modulosdb: `
         SELECT
         M.ID_MODULO,
