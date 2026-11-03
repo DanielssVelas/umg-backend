@@ -1,9 +1,14 @@
-
 export default function makeComprasdb({ logger, execute, querys, oracledb }) {
+
+    // ==========================================
+    // REGISTRAR COMPRA
+    // ==========================================
 
     async function createCompradb(data) {
         try {
-            logger.info('[oracle][makeComprasdb][createCompradb] -> starting DB');
+            logger.info(
+                '[oracle][makeComprasdb][createCompradb] -> starting DB'
+            );
 
             const result = await execute(querys.registrarCompra, {
                 p_total: {
@@ -11,51 +16,69 @@ export default function makeComprasdb({ logger, execute, querys, oracledb }) {
                     dir: oracledb.BIND_IN,
                     type: oracledb.NUMBER
                 },
+
                 p_proveedor: {
                     val: data.idProveedor,
                     dir: oracledb.BIND_IN,
                     type: oracledb.NUMBER
                 },
+
                 p_usuario: {
                     val: data.idUsuario,
                     dir: oracledb.BIND_IN,
                     type: oracledb.NUMBER
                 },
+
                 p_tipo_comprobante: {
                     val: data.tipoComprobante,
                     dir: oracledb.BIND_IN,
-                    type: oracledb.STRING
+                    type: oracledb.STRING,
+                    maxSize: 50
                 },
+
                 p_serie: {
                     val: data.serie ?? null,
                     dir: oracledb.BIND_IN,
-                    type: oracledb.STRING
+                    type: oracledb.STRING,
+                    maxSize: 50
                 },
+
                 p_numero_comprobante: {
-                    val: data.numeroComprobante,
+                    val: data.numeroComprobante ?? null,
                     dir: oracledb.BIND_IN,
-                    type: oracledb.STRING
+                    type: oracledb.STRING,
+                    maxSize: 50
                 },
+
                 p_detalles: {
                     val: JSON.stringify(data.detalles),
                     dir: oracledb.BIND_IN,
                     type: oracledb.CLOB
                 },
-                p_mensaje: {
-                    dir: oracledb.BIND_OUT,
-                    type: oracledb.STRING,
-                    maxSize: 4000
-                },
+
+                // Primero P_RESULTADO
                 p_resultado: {
                     dir: oracledb.BIND_OUT,
                     type: oracledb.STRING,
                     maxSize: 50
+                },
+
+                // Después P_MENSAJE
+                p_mensaje: {
+                    dir: oracledb.BIND_OUT,
+                    type: oracledb.STRING,
+                    maxSize: 4000
                 }
             });
 
-            const { p_mensaje, p_resultado } = result.outBinds;
+            const {
+                p_resultado,
+                p_mensaje
+            } = result.outBinds;
 
-            logger.info(`[oracle][makeComprasdb][createCompradb] -> ${p_mensaje}`);
+            logger.info(
+                `[oracle][makeComprasdb][createCompradb] -> ${p_mensaje}`
+            );
 
             return {
                 flag: p_resultado === 'TRUE',
@@ -63,7 +86,9 @@ export default function makeComprasdb({ logger, execute, querys, oracledb }) {
             };
 
         } catch (error) {
-            logger.error(`[oracle][makeComprasdb][createCompradb] ${error}`);
+            logger.error(
+                `[oracle][makeComprasdb][createCompradb] ${error}`
+            );
 
             return {
                 flag: false,
@@ -72,57 +97,64 @@ export default function makeComprasdb({ logger, execute, querys, oracledb }) {
         }
     }
 
-    // Obtener todas las compras
+    // ==========================================
+    // HISTORIAL DE COMPRAS
+    // ==========================================
+
     async function getHistorialCompras() {
         try {
-            console.log('CONSULTA HISTORIAL:', querys.historialComprasdb);
-            console.log('TIPO DE CONSULTA:', typeof querys.historialComprasdb);
-            logger.info('[oracle][makeComprasdb][getHistorialCompras] -> Consultando historial');
+            logger.info(
+                '[oracle][makeComprasdb][getHistorialCompras] -> Consultando historial'
+            );
 
-            const result = await execute(querys.historialComprasdb, []);
+            const result = await execute(
+                querys.historialComprasdb,
+                []
+            );
 
             return result?.rows || [];
 
         } catch (error) {
-            logger.error(`[oracle][makeComprasdb][getHistorialCompras] ${error}`);
+            logger.error(
+                `[oracle][makeComprasdb][getHistorialCompras] ${error}`
+            );
+
             throw error;
         }
     }
 
-    // Obtener los productos de una compra
+    // ==========================================
+    // DETALLE DE COMPRA
+    // ==========================================
 
+    async function getDetalleCompra(idCompra) {
+        try {
+            const sql = querys.detalleHistorialComprasdb;
 
-async function getDetalleCompra(idCompra) {
-    try {
-        const sql = querys.detalleHistorialComprasdb;
-
-        console.log('========== PRUEBA DETALLE ==========');
-        console.log('ID COMPRA:', idCompra);
-        console.log('SQL:', sql);
-        console.log('TIPO SQL:', typeof sql);
-        console.log('====================================');
-
-        if (typeof sql !== 'string') {
-            throw new Error('La consulta detalleHistorialComprasdb no existe en querys.js');
-        }
-
-        const result = await execute(sql, {
-            idCompra: {
-                val: Number(idCompra),
-                dir: oracledb.BIND_IN,
-                type: oracledb.NUMBER
+            if (typeof sql !== 'string') {
+                throw new Error(
+                    'La consulta detalleHistorialComprasdb no existe en querys.js'
+                );
             }
-        });
 
-        return result?.rows || [];
+            const result = await execute(sql, {
+                idCompra: {
+                    val: Number(idCompra),
+                    dir: oracledb.BIND_IN,
+                    type: oracledb.NUMBER
+                }
+            });
 
-    } catch (error) {
-        logger.error(`[oracle][makeComprasdb][getDetalleCompra] ${error}`);
-        throw error;
+            return result?.rows || [];
+
+        } catch (error) {
+            logger.error(
+                `[oracle][makeComprasdb][getDetalleCompra] ${error}`
+            );
+
+            throw error;
+        }
     }
-}
-
-
 
     return Object.freeze({
         createCompradb,

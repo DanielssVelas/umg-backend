@@ -3,12 +3,13 @@ import productsRouter from './productsRouter.js'
 import salesRouter from './salesRouter.js'
 import proveedoresRouter from './proveedoresRouter.js'
 import gestionarCajaRouter from './gestionCajaRouter.js'
-import usuariosRouter from './usuariosRouter.js';
-import authRouter from './authRouter.js';
+import usuariosRouter from './usuariosRouter.js'
+import authRouter from './authRouter.js'
 import comprasRouter from './comprasRouter.js'
 import cotizacionesRouter from './cotizacionesRouter.js'
 import clientesRouter from './clientesRouter.js'
 import healtRouter from './healtRouter.js'
+import kardexRouter from './kardexRouter.js'
 
 const router = Router()
 
@@ -22,5 +23,6 @@ router.use('', comprasRouter)
 router.use('', cotizacionesRouter)
 router.use('', clientesRouter)
 router.use('', healtRouter)
+router.use('', kardexRouter)
 
 export default router

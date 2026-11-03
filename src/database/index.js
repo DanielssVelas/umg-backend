@@ -1,7 +1,7 @@
-
 import oracledb from 'oracledb'
 import env from '../config/env.js'
 import { logger } from '../utils/index.js'
+
 import makeProductsdb from './makeProductsdb.js'
 import makeSalesdb from './makeSalesdb.js'
 import makeProveedoresdb from './makeProveedoresdb.js'
@@ -12,6 +12,7 @@ import makeAuthdb from './makeAuthdb.js'
 import makeComprasdb from './makeComprasdb.js'
 import makeCotizacionesdb from './makeCotizacionesdb.js'
 import makeClientesdb from './makeClientesdb.js'
+import makeKardexdb from './makeKardexdb.js'
 
 const {
   ORACLE_USER,
@@ -35,7 +36,6 @@ const config = {
   poolAlias: 'default'
 }
 
-// Inicialización diferida del pool de Oracle
 let poolPromise = null
 
 async function getConnection() {
@@ -76,7 +76,6 @@ async function execute(sql, params) {
         await conn.close()
       } catch (e) {
         logger.error(`[easyport-oracle][execute][finally] ${e}`)
-        // eslint-disable-next-line no-unsafe-finally
         throw e
       }
     }
@@ -172,6 +171,14 @@ const clientesdb = makeClientesdb({
   querys
 })
 
+// CONEXIÓN DEL MÓDULO KARDEX
+const kardexdb = makeKardexdb({
+  logger,
+  execute,
+  querys,
+  oracledb
+})
+
 const easyOracleDb = {
   productsdb,
   salesdb,
@@ -181,7 +188,8 @@ const easyOracleDb = {
   authdb,
   comprasdb,
   cotizacionesdb,
-  clientesdb
+  clientesdb,
+  kardexdb
 }
 
 export default easyOracleDb
