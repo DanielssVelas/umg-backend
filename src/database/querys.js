@@ -55,8 +55,6 @@ const querys = {
                 :nit
             );
         END;
-<<<<<<< Updated upstream
-=======
     `,
 
     gestionarCajadb: `
@@ -370,7 +368,6 @@ const querys = {
         AND RM.ESTADO = 'A'
         AND M.ESTADO = 'A'
         ORDER BY M.ORDEN ASC
->>>>>>> Stashed changes
     `
 };
 
