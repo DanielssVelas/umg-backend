@@ -41,27 +41,24 @@ export default function makeComprasdb({ logger, execute, querys, oracledb }) {
                     dir: oracledb.BIND_IN,
                     type: oracledb.CLOB
                 },
-                p_mensaje: {
-                    dir: oracledb.BIND_OUT,
-                    type: oracledb.STRING,
-                    maxSize: 4000
-                },
                 p_resultado: {
                     dir: oracledb.BIND_OUT,
                     type: oracledb.STRING,
                     maxSize: 50
+                },
+                p_mensaje: {
+                    dir: oracledb.BIND_OUT,
+                    type: oracledb.STRING,
+                    maxSize: 4000
                 }
             });
-
             const { p_mensaje, p_resultado } = result.outBinds;
-
+            console.log('result.outBinds', result.outBinds);
             logger.info(`[oracle][makeComprasdb][createCompradb] -> ${p_mensaje}`);
-
             return {
                 flag: p_resultado === 'TRUE',
                 mensaje: p_mensaje
             };
-
         } catch (error) {
             logger.error(`[oracle][makeComprasdb][createCompradb] ${error}`);
 

@@ -127,19 +127,17 @@ const querys = {
         ORDER BY 1 DESC
     `,
     registrarCompra: `
-        BEGIN
-            PR_REGISTRAR_COMPRAS(
-                :p_total,
-                :p_proveedor,
-                :p_usuario,
-                :p_tipo_comprobante,
-                :p_serie,
-                :p_numero_comprobante,
-                :p_detalles,
-                :p_mensaje,
-                :p_resultado
-            );
-        END;
+        CALL PR_REGISTRAR_COMPRAS(
+            :p_total,
+            :p_proveedor,
+            :p_usuario,
+            :p_tipo_comprobante,
+            :p_serie,
+            :p_numero_comprobante,
+            :p_detalles,
+            :p_resultado,
+            :p_mensaje
+        )
     `,
     historialComprasdb: `
         SELECT
