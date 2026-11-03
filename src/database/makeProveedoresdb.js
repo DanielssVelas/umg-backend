@@ -1,7 +1,8 @@
 export default function makeProveedoresdb({
     logger,
     execute,
-    querys
+    querys,
+    oracledb
 }) {
 
     async function getProveedores() {
@@ -26,39 +27,58 @@ export default function makeProveedoresdb({
         }
     }
 
-    async function createProveedor({
-        nombre,
-        direccion,
-        telefono,
-        nit
-    }) {
+    async function createProveedor(data) {
         try {
             logger.info(
-                '[makeProveedoresdb][createProveedor] -> Registrando proveedor'
+                '[oracle][makeProveedoresdb][createProveedor] -> Gestionando proveedor'
             );
-
-            const result = await execute(
-                querys.crearProveedor,
-                [
-                    null,
-                    nombre,
-                    direccion,
-                    telefono,
-                    nit || null
-                ]
+            const query = querys.crearProveedor;
+            const {
+                id_proveedor,
+                nombre,
+                direccion,
+                telefono,
+                nit
+            } = data;
+            const result = await execute(query, {
+                id_proveedor: id_proveedor ?? null,
+                nombre,
+                direccion,
+                telefono,
+                nit: nit || null,
+                p_resultado: {
+                    dir: oracledb.BIND_OUT,
+                    type: oracledb.STRING,
+                    maxSize: 4000,
+                },
+                p_mensaje: {
+                    dir: oracledb.BIND_OUT,
+                    type: oracledb.STRING,
+                    maxSize: 4000,
+                }
+            });
+            const {
+                p_mensaje,
+                p_resultado,
+            } = result.outBinds;
+            console.log('result.outBinds', result.outBinds);
+            logger.info(
+                `[oracle][makeProveedoresdb][createProveedor] -> ${p_mensaje}`
             );
-
-            return result;
-
-        } catch (error) {
+            return {
+                flag: p_resultado === 'TRUE',
+                mensaje: p_mensaje,
+            };
+        } catch (e) {
             logger.error(
-                `[makeProveedoresdb][createProveedor] Error: ${error}`
+                `[oracle][makeProveedoresdb][createProveedor] ${e}`
             );
-
-            throw error;
+            return {
+                flag: false,
+                mensaje: 'Error al gestionar el proveedor'
+            };
         }
     }
-
     // ACTUALIZAR PROVEEDOR
     async function updateProveedor({
         idProveedor,
@@ -100,7 +120,6 @@ export default function makeProveedoresdb({
             throw error;
         }
     }
-
     return Object.freeze({
         getProveedores,
         createProveedor,

@@ -45,14 +45,11 @@ export default function makeProveedoresActions({ logger, easyOracleDb }) {
         '[makeProveedoresActions][createProveedorAction] -> Registrando proveedor'
       );
 
-      await easyOracleDb.proveedoresdb.createProveedor(data);
+      const result = await easyOracleDb.proveedoresdb.createProveedor(data);
 
       return {
         statusCode: 201,
-        resp: {
-          flag: true,
-          mensaje: 'Proveedor creado correctamente',
-        },
+        resp: result
       };
 
     } catch (error) {

@@ -46,17 +46,16 @@ const querys = {
     `,
 
     crearProveedor: `
-        BEGIN
-            PR_GESTIONAR_PROVEEDOR(
+        CALL PR_GESTIONAR_PROVEEDOR(
                 :id_proveedor,
                 :nombre,
                 :direccion,
                 :telefono,
-                :nit
-            );
-        END;
+                :nit,
+                :p_mensaje,
+                :p_resultado
+            )
     `,
-
     gestionarCajadb: `
         CALL PR_GESTIONAR_CAJA(
             :p_accion,
@@ -69,7 +68,6 @@ const querys = {
             :mensaje
         )
     `,
-
     consultarCajaAbiertaDb: `
         SELECT
             C.ID_CAJA AS "idCaja",
@@ -79,12 +77,14 @@ const querys = {
             C.MONTO_INICIAL AS "montoInicial",
             C.ESTADO AS "estado",
 
+            -- Total de ventas
             NVL((
                 SELECT SUM(V.TOTAL)
                 FROM LAB1.VENTAS V
                 WHERE V.ID_CAJA = C.ID_CAJA
             ), 0) AS "totalVentas",
 
+            -- Total de entradas
             NVL((
                 SELECT SUM(M.MONTO)
                 FROM LAB1.MOVIMIENTOS_CAJA M
@@ -92,6 +92,7 @@ const querys = {
                 AND UPPER(M.TIPO_MOVIMIENTO) = 'ENTRADA'
             ), 0) AS "entradas",
 
+            -- Total de salidas
             NVL((
                 SELECT SUM(M.MONTO)
                 FROM LAB1.MOVIMIENTOS_CAJA M
@@ -99,6 +100,7 @@ const querys = {
                 AND UPPER(M.TIPO_MOVIMIENTO) = 'SALIDA'
             ), 0) AS "salidas",
 
+            -- Efectivo esperado
             (
                 C.MONTO_INICIAL
                 + NVL((
@@ -124,31 +126,19 @@ const querys = {
         WHERE C.ID_USUARIO = :idUsuario
         ORDER BY 1 DESC
     `,
-
-    // ==========================================
-    // REGISTRAR COMPRA
-    // ==========================================
-
     registrarCompra: `
-        BEGIN
-            PR_REGISTRAR_COMPRAS(
-                :p_total,
-                :p_proveedor,
-                :p_usuario,
-                :p_tipo_comprobante,
-                :p_serie,
-                :p_numero_comprobante,
-                :p_detalles,
-                :p_resultado,
-                :p_mensaje
-            );
-        END;
+        CALL PR_REGISTRAR_COMPRAS(
+            :p_total,
+            :p_proveedor,
+            :p_usuario,
+            :p_tipo_comprobante,
+            :p_serie,
+            :p_numero_comprobante,
+            :p_detalles,
+            :p_resultado,
+            :p_mensaje
+        )
     `,
-
-    // ==========================================
-    // HISTORIAL DE COMPRAS
-    // ==========================================
-
     historialComprasdb: `
         SELECT
             C.ID_COMPRA,
@@ -166,10 +156,6 @@ const querys = {
         ORDER BY C.FECHA DESC, C.ID_COMPRA DESC
     `,
 
-    // ==========================================
-    // DETALLE DE COMPRA
-    // ==========================================
-
     detalleHistorialComprasdb: `
         SELECT
             D.ID_DETALLE_COMPRA,
@@ -185,11 +171,6 @@ const querys = {
         WHERE D.ID_COMPRA = :idCompra
         ORDER BY D.ID_DETALLE_COMPRA
     `,
-
-    // ==========================================
-    // CREAR COTIZACIÓN
-    // ==========================================
-
     crearCotizacion: `
         DECLARE
             v_id_cotizacion NUMBER;
@@ -247,10 +228,6 @@ const querys = {
         END;
     `,
 
-    // ==========================================
-    // HISTORIAL DE COTIZACIONES
-    // ==========================================
-
     historialCotizacionesdb: `
         SELECT
             C.ID_COTIZACION,
@@ -286,7 +263,6 @@ const querys = {
         WHERE D.ID_COTIZACION = :idCotizacion
         ORDER BY D.ID_DETALLE_COTIZACION
     `,
-
     obtenerCotizacionParaConversion: `
         SELECT
             ID_COTIZACION,
@@ -305,7 +281,6 @@ const querys = {
         WHERE ID_COTIZACION = :idCotizacion
         AND ESTADO = 'PENDIENTE'
     `,
-
     // ==========================================
     // KARDEX
     // ==========================================
@@ -348,27 +323,22 @@ const querys = {
         FROM PRODUCTOS P
         ORDER BY P.NOMBRE
     `,
-
-    // ==========================================
-    // MÓDULOS
-    // ==========================================
-
     modulosdb: `
         SELECT
-            M.ID_MODULO,
-            M.NOMBRE,
-            M.RUTA,
-            M.ICONO,
-            M.ESTADO,
-            M.ORDEN
-        FROM LAB1.MODULOS M
-        INNER JOIN LAB1.ROL_MODULOS RM
-            ON RM.ID_MODULO = M.ID_MODULO
-        WHERE RM.ID_ROL = :id_rol
-        AND RM.ESTADO = 'A'
-        AND M.ESTADO = 'A'
-        ORDER BY M.ORDEN ASC
-    `
+        M.ID_MODULO,
+        M.NOMBRE,
+        M.RUTA,
+        M.ICONO,
+        M.ESTADO,
+        M.ORDEN
+    FROM LAB1.MODULOS M
+    INNER JOIN LAB1.ROL_MODULOS RM
+        ON RM.ID_MODULO = M.ID_MODULO
+    WHERE RM.ID_ROL = :id_rol
+    AND RM.ESTADO = 'A'
+    AND M.ESTADO = 'A'
+    ORDER BY M.ORDEN ASC
+    `,
 };
 
 export default querys;
