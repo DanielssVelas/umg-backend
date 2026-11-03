@@ -46,15 +46,15 @@ const querys = {
     `,
 
     crearProveedor: `
-        BEGIN
-            PR_GESTIONAR_PROVEEDOR(
+        CALL PR_GESTIONAR_PROVEEDOR(
                 :id_proveedor,
                 :nombre,
                 :direccion,
                 :telefono,
-                :nit
-            );
-        END;
+                :nit,
+                :p_mensaje,
+                :p_resultado
+            )
     `,
     gestionarCajadb: `
         CALL PR_GESTIONAR_CAJA(
