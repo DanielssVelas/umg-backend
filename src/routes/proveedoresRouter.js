@@ -5,6 +5,7 @@ import { proveedoresController } from '../controllers/index.js'
 const router = Router()
 
 // Obtener todos los proveedores
+// no se que paso
 router.get(
   '/proveedores',
   routerCallback(proveedoresController.getProveedoresController)
