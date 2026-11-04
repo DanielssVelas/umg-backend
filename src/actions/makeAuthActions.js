@@ -4,6 +4,8 @@ import jwt from 'jsonwebtoken';
 import env from '../config/env.js';
 
 export default function makeAuthActions({ logger, easyOracleDb }) {
+    console.log('env', env);
+    
     async function login(data) {
         try {
             logger.info('[makeAuthActions][login] -> Starting login');
